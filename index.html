@@ -1,10 +1,29 @@
-<html>
-  <head>
+<!DOCTYPE html>
+<html ng-app="githubViewer">
 
+  <head>
+    <link data-require="bootstrap@3.3.7" data-semver="3.3.7" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="./dist/app.js"></script>
   </head>
 
-  <body>
-    <div>Hello</div>
-    <script src="./dist/app.js"></script>
+  <body ng-controller="MainController">
+    <div class="col-sm-8">
+      <h1 class="well well-lg">{{message}}</h1>
+      <div>
+      {{ error }}
+    </div>
+      <form name="searchUser">
+        <input type="search" placeholder="Username to find" ng-model="user.name" />
+        <input type="submit" value="Search" ng-click="search(user.name)" />
+      </form>
+      <div>
+        <div class="well well-lg">First Name: {{user.name}}</div>
+        <img ng-src="{{user.avatar_url}}" title="{{user.name}}" />
+      </div>
+    </div>
   </body>
+
 </html>
+
