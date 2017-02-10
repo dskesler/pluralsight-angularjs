@@ -1,5 +1,5 @@
 // Code goes here
-import {angular} from 'angular';
+import * as angular from 'angular';
 
 (function() {
 
