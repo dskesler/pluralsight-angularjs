@@ -1,9 +1,7 @@
-// Code goes here
 import * as angular from 'angular';
 
-(function() {
-
-  var app = angular.module("githubViewer", []); //need empty array to declare module
+(function(){
+  var app= angular.module("githubViewer", []); //need empty array to declare module
 
   var MainController = function ($scope, $http){
   var onUserComplete = function(response){
@@ -12,9 +10,7 @@ import * as angular from 'angular';
   }
 
   var onError = function(reason) {
-
     $scope.error = "Could not fetch the user";
-
   };
 
   $scope.search = function(userName){
@@ -27,4 +23,8 @@ import * as angular from 'angular';
 };
 
   app.controller("MainController", MainController);
-}());
+
+  })();
+
+
+
