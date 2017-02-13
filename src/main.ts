@@ -20,7 +20,7 @@ import * as angular from 'angular';
         .then(onUserComplete, onError);
     }
 
-
+    $scope.username = "angular"
     $scope.message = "Hello";
   };
 
