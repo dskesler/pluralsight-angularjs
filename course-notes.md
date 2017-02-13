@@ -25,8 +25,15 @@ We also have **Directives** that will move data from View to the Model, e.g. on 
 ### ng-click
 
 We can pass a function with parameters using `ng-click`: e.g. `ng-click="search(username)" `
-### ng-repeat
-### Filters
+### ng-repeat  
+Use directive ng-repeat to iterate over a collection e.g. `<div ng-repeat="repo in repos">`
+Then we access that `repo` variable to loop through and build table or list on the View. e.g. `<tr>{{ repo.name }}</td>`
+### Filters  
+- We use Filters to pipe data in models through a filter which can change formatting.  
+- We can use **json** filter to do a direct dump of object data into View for debgugging purposes.  
+- Several other filters: date, limitTo, number, orderBy  
+- We can also use property names in the sortOrder Filter in Model. e.g. `$scope.repoSortOrder = "-starcount";`
+Then use `<ng-repeat="repo in repos | orderBy:repoSortOrder>`
 ### ng-show and hide
 ### ng-include
 ### Directives!
