@@ -25,6 +25,3 @@ import * as angular from 'angular';
   app.controller("MainController", MainController);
 
   })();
-
-
-
