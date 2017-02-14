@@ -1,55 +1,87 @@
 <!DOCTYPE html>
 <html ng-app="githubViewer">
 
-  <head>
-    <link data-require="bootstrap@3.3.7" data-semver="3.3.7" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-     <script src="./dist/app.js"></script>
-  </head>
+<head>
+  <link data-require="bootstrap@3.3.7" data-semver="3.3.7" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+  />
+  <script src="./dist/app.js"></script>
+</head>
 
-  <body ng-controller="GithubViewer">
-    <div class="col-sm-8">
-      <h1 class="well well-lg">{{message}}</h1>
-      <div>
-      {{ error }}
+<body ng-controller="GithubViewer">
+<div class="row">
+    <h1 class="well well-md">{{message}}</h1>
+</div>
+<!--search for username panel-->
+  <div class="row">
+<div class="col-sm-6">
+
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h3 class="panel-title">Panel title</h3>
     </div>
-      <form name="searchUser" ng-submit="search(user.name)">
-        <input type="search" placeholder="Angular" ng-model="user.name" />
-        <input type="submit" value="Search"/>
+    <div class="panel-body">
+      <form name="userSearch" ng-submit="search(user.name)">
+        <div class="form-group">
+          <input type="text" class="form-control" id="searchUserInput" placeholder="Angular" ng-model="user.name" />
+          <button type="submit" class="btn btn-success">Search</button>
+        </div>
       </form>
-      <div>
-        <div class="well well-lg">First Name: {{user.name}}</div>
-        <img ng-src="{{user.avatar_url}}" title="{{user.name}}" />
-      </div>
     </div>
-
-  <div class="form-group">
-    <label for="select1">label</label>
-    <select class="form-control" id="selectViewerSortOrder" placeholder="Input field" ng-model="repoSortOrder">
-      <option value="+name">Name - ascending</option>
-      <option value="-name">Name - descending</option>
-      <option value="-stargazers_count">Stars - descending</option>
-      <option value="+stargazers_count">Stars - ascending</option>
-    </select>
+  </div>
+  </div>
   </div>
 
-<div class="container">
-    <table class="table table-striped">
-          <thead>
-          <tr>
-            <th>Name: </th>
-            <th>Stars:</th>
-            <th>Language:</th>
-          </tr>
-          <tr ng-repeat="repo in repos | orderBy:repoSortOrder">
-            <td>{{repo.name }}</td>
-            <td>{{repo.stargazers_count | number }}</td>
-            <td>{{repo.language }}</td>
-          </tr>
 
-          </thead>
-    </table>
+<!--display user name well-->
+
+<div class="row">
+  <div class="col-xs-4">
+    <div class="well well-md">First Name: {{user.name}}
+    <img ng-src="{{user.avatar_url}}" title="{{user.name}}" />
+  </div>
+  </div>
 </div>
-  </body>
+
+<!--sorting options select panel-->
+  <div class="col-sm-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Sorting Options</h3>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <select class="form-control input-medium" id="selectViewerSortOrder" placeholder="Input field" ng-model="repoSortOrder">
+                <option value="+name">Name - ascending</option>
+                <option value="-name">Name - descending</option>
+                <option value="-stargazers_count">Stars - descending</option>
+                <option value="+stargazers_count">Stars - ascending</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!--table displaying search results of repos-->
+  <div class="col-sm-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name: </th>
+          <th>Stars:</th>
+          <th>Language:</th>
+        </tr>
+        <tr ng-repeat="repo in repos | orderBy:repoSortOrder">
+          <td>{{repo.name }}</td>
+          <td>{{repo.stargazers_count | number }}</td>
+          <td>{{repo.language }}</td>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+</body>
 
 </html>
-
