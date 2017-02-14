@@ -33,9 +33,35 @@ Then we access that `repo` variable to loop through and build table or list on t
 - We can use **json** filter to do a direct dump of object data into View for debgugging purposes.  
 - Several other filters: date, limitTo, number, orderBy  
 - We can also use property names in the sortOrder Filter in Model. e.g. `$scope.repoSortOrder = "-starcount";`
-Then use `<ng-repeat="repo in repos | orderBy:repoSortOrder>`
+  Then use `<ng-repeat="repo in repos | orderBy:repoSortOrder>`
+
 ### ng-show and hide
 ### ng-include
-### Directives!
+### Directives Summary
+- Binding Directives: move text anywhere we need. e.g. `<td>{{repo.name}}</td>`
+- Model diretives: move text from input or select to the model: e.g. `<input type="search" ng-model="username" >`
 ### Summary
+## Services
+### The Venn of Sevices
+- Controllers setup the model (i.e. $scope)
+- Views consumes the model
+- Directives are an intermediary
+  - ng-model gets a value from the Controller into the Model
+  - ng-submit pushes a select or input value from the View into the Model
+- Services are a "grab bag" if logic doesn't fit in Directives.
+  - They offer functionality to Model and Controller
+  - Or maybe you need to package up logic in a large Controller into smaller Service.
+```mermaid
+graph LR
+model((Model<br>i.e. $scope))
+view((View<br>i.e. index.html))
+ctrl((Controller<br>i.e. app.js))
+
+model-- directives --> view
+view  --directives--> model
+model --services --> ctrl
+ctrl  --> model
+```
+### Gamification
+### Service Roles
 
