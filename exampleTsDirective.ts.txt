@@ -1,0 +1,146 @@
+module AaronholmesNet.Directives  
+{
+    'use strict';
+
+    export interface IProject extends Resources.IProject
+    {
+        title: string;
+        active: boolean;
+    }
+
+    export interface IProjectsScope extends ng.IScope
+    {
+        [key: string] : any;
+
+        projects: Interfaces.IListInterface<IProject>
+    }
+
+    export class ProjectsDirective
+    {
+        // #region Angular directive properties, fields, and methods
+        public templateUrl = '/Views/Home/projects.html';
+        public scope       = {};
+        public link: (scope: IProjectsScope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes) => void;
+        // #endregion
+        
+        //#region Initialization and destruction
+        constructor(ProjectResource: Resources.IProjectResource, $location: ng.ILocationService, $sanitize: ng.sanitize.ISanitizeService, $sce: ng.ISCEService)
+        {
+            this._$location = $location;
+            this._$sanitize = $sanitize;
+            this._$sce      = $sce;
+
+            ProjectsDirective.prototype.link = (scope: IProjectsScope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes) =>
+            {
+                scope.projects = [];
+
+                ProjectResource.query(this._handleProjectQuerySuccess.bind(this), this._handleProjectQueryError.bind(this));
+
+                // toggle which tab and tab detail is visible when a link is clicked
+                scope.$on('$locationChangeStart', this._handleLocationChangeStart.bind(this));
+
+                scope.$on('$destroy', this.destruct);
+
+                this._scope = scope;
+            }
+        }
+
+        public static Factory()
+        {
+            var directive = (ProjectResource: Resources.IProjectResource, $location: ng.ILocationService, $sanitize: ng.sanitize.ISanitizeService, $sce: ng.ISCEService) =>
+            {
+                return new ProjectsDirective(ProjectResource, $location, $sanitize, $sce);
+            };
+
+            directive['$inject'] = ['ProjectResource', '$location', '$sanitize', '$sce'];
+
+            return directive;
+        }
+
+        private destruct()
+        {
+            this._projectMap = null;
+            this._$location  = null;
+            this._$sanitize  = null;
+            this._$sce       = null;
+            this._scope      = null;
+        }
+        // #endregion
+
+        // #region Private class properties, fields, and methods
+        private _projectMap : { [key: number]: IProject; } = {};
+        private _$location  : ng.ILocationService;
+        private _$sanitize  : ng.sanitize.ISanitizeService;
+        private _$sce       : ng.ISCEService;
+        private _scope      : IProjectsScope;
+        // #endregion
+
+        // #region Private event handlers
+        // return my repositories first, and forks second.
+        // from there, sort by last change time.
+        private _projectSort(a: Resources.IProject, b: Resources.IProject): number
+        {
+            if (a.fork === false && b.fork === true) return -1;
+
+            if (a.fork === true && b.fork === false) return 1;
+
+            if (a.updated_at > b.updated_at) return -1;
+
+            if (a.updated_at < b.updated_at) return 1;
+
+            return 0;
+        }
+
+        private _handleProjectQuerySuccess(data: IProject[]): void
+        {
+            data.sort(this._projectSort);
+
+            var pathname = this._$location.path();
+
+            var activeSet = false;
+            data.forEach((project: IProject) =>
+            {
+                project.active = pathname == '/' + project.id;
+                activeSet      = activeSet || project.active;
+
+                project.name        = this._$sanitize(project.name);
+                project.description = this._$sanitize(project.description);
+                project.url         = this._$sce.trustAsUrl(project.url);
+                project.readme      = this._$sce.trustAsHtml(project.readme);
+
+                project.title = project.name + (project.fork ? ' (fork)' : ' (repo)');
+
+                this._scope.projects.push(project);
+
+                this._projectMap[project.id] = this._scope.projects[this._scope.projects.length - 1];
+            });
+
+            if (!activeSet)
+            {
+                data[0].active = true;
+            }
+        }
+
+        private _handleProjectQueryError(data: any): void
+        {
+            throw new Error(data);
+        }
+
+        private _handleLocationChangeStart(event: ng.IAngularEvent, next: string, current: string): void
+        {
+            var a = <HTMLAnchorElement>document.createElement('A');
+
+            a.href = current;
+            var pathname = (<string[]>(a.pathname.match(/^\/(\d+)/) || [, 0]))[1];
+            var currentId = pathname == undefined ? 0 : parseInt(pathname, 10);
+
+            a.href = next;
+            pathname = (<string[]>(a.pathname.match(/^\/(\d+)/) || [, 0]))[1];
+            var nextId = pathname == undefined ? 0 : parseInt(pathname, 10);
+
+            currentId && (this._projectMap[currentId].active = false);
+            nextId && (this._projectMap[nextId].active = true);
+        }
+        // #endregion
+    }
+}

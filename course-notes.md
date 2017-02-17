@@ -64,4 +64,21 @@ ctrl  --> model
 ```
 ### Gamification
 ### Service Roles
+### Using $log
+### UI Services
+
+Some services interact directly with the UI.
+
+Using $location service. 
+
+- `$location.hash('someHtmlElementId')`
+- `$anchorScoll()`: this is invoked and scrolls to the hash added to the URL.
+
+### Custom Services
+- create reusable logic
+- Create shared data
+- Manage complexity
+
+### A GitHub Service
+
 

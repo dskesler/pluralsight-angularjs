@@ -7,7 +7,7 @@
   <script src="./dist/app.js"></script>
 </head>
 
-<body ng-controller="GithubViewer">
+<body ng-controller="GitHubViewerController as controller">
   <div class="row">
     <h1 class="well well-md">{{message}}</h1>
   </div>
@@ -20,7 +20,7 @@
 
     <div class="row">
     <div class="col-sm-6">
-     <h2 class="well well-md">Better type fast. You only have {{countdown}} seconds left.</h2>
+     <h2 ng-show="countdown > 0" class="well well-md">Better type fast you only have {{countdown}} seconds</h2>
     </div>
   </div>
   <!--search for username panel-->
@@ -42,9 +42,7 @@
     </div>
   </div>
 
-
-
-  <div ng-include="'user_details.html'" ng-show="user"></div>
+  <div id="userDetails" ng-include="'user_details.html'" ng-show="user"></div>
 
 </body>
 

@@ -3,11 +3,13 @@ import * as angular from 'angular';
 (function () {
 
   //creating our new module
-  var app = angular.module("githubViewer", []); //need empty array to declare module
+  angular
+    .module("githubViewer", []) /*need empty array to declare module*/
+    .controller('GitHubViewerController',GitHubViewerController);  //registering controller: ("Name of controller", Function_To_Use_For_Controller)
 
-  var GithubViewer = function ($scope, $http) {
-
-
+  function GitHubViewerController (
+    $scope, $http, $interval,
+    $log, $anchorScroll, $location) {
 
     var onUserComplete = function (response) {
       $scope.user = response.data;
@@ -19,6 +21,8 @@ import * as angular from 'angular';
 
     var onRepos = function(response){
         $scope.repos = response.data;
+        $location.hash("userDetails");
+        $anchorScroll();
     }
 
     var onError = function (reason) {
@@ -26,26 +30,39 @@ import * as angular from 'angular';
     };
 
     var decrementCountdown = function(){
-      var count = $scope.countdown;
-      count -= 1;
-      if(count < 1){
-        $scope.search($scope.username)
+       $scope.countdown -= 1;
+      if( $scope.countdown < 1){
+        $scope.search($scope.username);
       }
-    }
+    };
 
     $scope.search = function (userName) {
+      $log.info("searching for "+ userName);
       $http.get("https://api.github.com/users/" + userName)
         .then(onUserComplete, onError);
+      if(countdownInterval){
+        $interval.cancel(countdownInterval);
+        //$scope.countdown = null;
+        $scope.timerMessage = "Search complete."
+      }
     }
+    var countdownInterval = null;
+
+    var getCountdown = function(){
+      return $scope.countdown;
+    }
+
+    var startCountdown = function(){
+      countdownInterval =  $interval(decrementCountdown, 1000, getCountdown);
+    };
 
     $scope.username = "angular"
     $scope.message = "GitHub Search";
     $scope.repoSortOrder = "-stargazers_count";
-    $scope.countdown = 6;
+    $scope.countdown = 10;
+    $scope.timerMessage = `Better type fast you only have ${getCountdown()} seconds left.`
 
-  };
-
-  //registering controller: ("Name of controller", Function_To_Use_For_Controller)
-  app.controller("GithubViewer", ["$scope", "$http", GithubViewer]);
+    startCountdown();
+ };
 
 })();

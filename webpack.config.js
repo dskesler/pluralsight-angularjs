@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
   entry: {
@@ -14,7 +15,9 @@ module.exports = {
 
   module: {
     loaders: [
-       { test: /\.ts?$/, loader: "awesome-typescript-loader" }
+       {
+         test: /\.ts?$/, loader: "awesome-typescript-loader"
+        }
     ]
   }
 
